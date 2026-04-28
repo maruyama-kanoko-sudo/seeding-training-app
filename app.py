@@ -36,14 +36,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-Base.metadata.create_all(bind=engine)
-
-# 起動時にDBが空なら初期データを投入
+# 起動時にDBテーブル作成＆初期データ投入
 @app.on_event("startup")
 async def startup_event():
     try:
+        Base.metadata.create_all(bind=engine)
+        print("✅ DBテーブル作成完了")
+    except Exception as e:
+        print(f"⚠️ DBテーブル作成エラー: {e}")
+    try:
         from init_db import init
         init()
+        print("✅ 初期データ投入完了")
     except Exception as e:
         print(f"DB初期化スキップ（既に初期化済み）: {e}")
 
