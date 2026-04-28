@@ -1,0 +1,19 @@
+# 環境変数（APIキーが含まれるので絶対にGitHubに上げない！）
+.env
+
+# データベースファイル（本番はPostgreSQL使用）
+*.db
+
+# Pythonキャッシュ
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# 仮想環境
+venv/
+.venv/
+env/

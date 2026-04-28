@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python create_training_sheet.py)",
+      "Bash(python3 create_training_sheet.py)",
+      "Bash(pip3 install *)",
+      "Bash(python3 scripts/recalc.py \"/Users/kanoko/Desktop/テスト/第2弾_初成約〜1ヶ月_トレーニングシート.xlsx\" 60)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(python3 create_training_sheet_v2.py)",
+      "Bash(open \"/Users/kanoko/Desktop/テスト/\")",
+      "Bash(chmod +x /Users/kanoko/Desktop/テスト/start.sh)",
+      "Bash(python3 init_db.py)",
+      "Bash(python3 -c \"import bcrypt; print\\(bcrypt.__version__\\)\")",
+      "Bash(python3 -m uvicorn app:app --host 0.0.0.0 --port 8000)",
+      "Bash(curl -s http://localhost:8000/)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"admin@example.com\",\"password\":\"admin123\"}')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H 'Content-Type: application/json' -d '{\"email\":\"tanaka@example.com\",\"password\":\"test123\"}')",
+      "Bash(lsof -ti:8000)",
+      "WebFetch(domain:candid-khapse-f58067.netlify.app)",
+      "Bash(curl -s http://localhost:8000/api/categories)",
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@example.com\",\"password\":\"admin123\"}')"
+    ]
+  }
+}

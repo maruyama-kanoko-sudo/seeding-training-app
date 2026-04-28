@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>研修進捗トラッカー</title>
+<style>
+  :root {
+    --red: #ef4444;
+    --red-bg: #fef2f2;
+    --red-border: #fecaca;
+    --yellow: #f59e0b;
+    --yellow-bg: #fffbeb;
+    --yellow-border: #fde68a;
+    --green: #22c55e;
+    --green-bg: #f0fdf4;
+    --green-border: #bbf7d0;
+    --gray: #6b7280;
+    --gray-bg: #f9fafb;
+    --border: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f3f4f6;
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  /* ヘッダー */
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  header h1 {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .btn-primary {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #1d4ed8; }
+
+  /* メインコンテンツ */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+
+  /* サマリーバー */
+  .summary {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .summary-card {
+    flex: 1;
+    min-width: 90px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .summary-card .count {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .summary-card .label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .summary-card.red .count { color: var(--red); }
+  .summary-card.yellow .count { color: var(--yellow); }
+  .summary-card.green .count { color: var(--green); }
+
+  /* アラートセクション */
+  .alert-section {
+    margin-bottom: 20px;
+  }
+
+  .alert-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .alert-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .alert-card {
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .alert-card .name { font-weight: 700; font-size: 15px; }
+  .alert-card .detail { font-size: 12px; color: #991b1b; }
+  .alert-card .action-tag {
+    background: var(--red);
+    color: #fff;
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  /* テーブル */
+  .table-section h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .table-wrap {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  thead tr {
+    background: var(--gray-bg);
+  }
+
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f9fafb; }
+  tbody tr.row-red { background: var(--red-bg); }
+  tbody tr.row-red:hover { background: #fee2e2; }
+  tbody tr.row-yellow { background: var(--yellow-bg); }
+  tbody tr.row-yellow:hover { background: #fef3c7; }
+
+  td {
+    padding: 12px 12px;
+    font-size: 13px;
+    vertical-align: middle;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+
+  .badge-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-yellow { background: var(--yellow-bg); color: #92400e; border: 1px solid var(--yellow-border); }
+  .badge-green { background: var(--green-bg); color: #15803d; border: 1px solid var(--green-border); }
+
+  .status-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .status-未着手 { background: #f3f4f6; color: var(--gray); }
+  .status-進行中 { background: #dbeafe; color: #1d4ed8; }
+  .status-完了 { background: var(--green-bg); color: #15803d; }
+
+  .progress-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    overflow: hidden;
+    min-width: 60px;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: #2563eb;
+    transition: width 0.3s;
+  }
+
+  .stagnant-days {
+    font-weight: 700;
+    color: var(--red);
+  }
+
+  .delete-btn {
+    background: none;
+    border: none;
+    color: #d1d5db;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.1s;
+  }
+  .delete-btn:hover { color: var(--red); }
+
+  /* モーダル */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 14px;
+    padding: 24px;
+    width: 100%;
+    max-width: 440px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .field input[type="text"],
+  .field input[type="date"],
+  .field select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field select:focus { border-color: #2563eb; }
+
+  .date-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .date-row input { flex: 1; }
+  .btn-today {
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.1s;
+  }
+  .btn-today:hover { background: #e5e7eb; }
+
+  .progress-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-field input[type="range"] {
+    flex: 1;
+    accent-color: #2563eb;
+  }
+  .progress-val {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: background 0.1s;
+  }
+  .radio-label:hover { background: var(--gray-bg); }
+  .radio-label input[type="radio"] { accent-color: #2563eb; }
+
+  .modal-footer {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  .btn-secondary {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .btn-secondary:hover { background: var(--gray-bg); }
+
+  .empty-state {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .emoji { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 15px; }
+    .btn-primary { padding: 8px 12px; font-size: 13px; }
+    td { padding: 10px 8px; }
+    th { padding: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>研修進捗トラッカー</h1>
+  <button class="btn-primary" onclick="openModal()">+ メンバー追加</button>
+</header>
+
+<main>
+  <!-- サマリー -->
+  <div class="summary">
+    <div class="summary-card red">
+      <div class="count" id="cnt-red">0</div>
+      <div class="label">🔴 停滞中</div>
+    </div>
+    <div class="summary-card yellow">
+      <div class="count" id="cnt-yellow">0</div>
+      <div class="label">🟡 要注意</div>
+    </div>
+    <div class="summary-card green">
+      <div class="count" id="cnt-green">0</div>
+      <div class="label">🟢 順調</div>
+    </div>
+  </div>
+
+  <!-- アラート -->
+  <div class="alert-section" id="alert-section" style="display:none">
+    <h2>🚨 停滞アラート</h2>
+    <div class="alert-cards" id="alert-cards"></div>
+  </div>
+
+  <!-- テーブル -->
+  <div class="table-section">
+    <h2>メンバー一覧</h2>
+    <div class="table-wrap" id="table-wrap">
+      <div class="empty-state" id="empty-state">
+        <div class="emoji">📋</div>
+        <p>まだメンバーがいません。<br>「メンバー追加」から登録してください。</p>
+      </div>
+      <table id="main-table" style="display:none">
+        <thead>
+          <tr>
+            <th>優先度</th>
+            <th>名前</th>
+            <th>ジョイン日</th>
+            <th>ステータス</th>
+            <th>進捗</th>
+            <th>最終更新</th>
+            <th>停滞</th>
+            <th>推奨アクション</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- モーダル -->
+<div class="modal-overlay" id="modal-overlay" onclick="onOverlayClick(event)">
+  <div class="modal">
+    <h3 id="modal-title">メンバー追加</h3>
+
+    <div class="field">
+      <label>名前 *</label>
+      <input type="text" id="f-name" placeholder="例：山田 太郎">
+    </div>
+
+    <div class="field">
+      <label>ジョイン日 *</label>
+      <input type="date" id="f-join">
+    </div>
+
+    <div class="field">
+      <label>ステータス</label>
+      <select id="f-status">
+        <option value="未着手">未着手</option>
+        <option value="進行中">進行中</option>
+        <option value="完了">完了</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>進捗 <span id="f-progress-label">0%</span></label>
+      <div class="progress-field">
+        <input type="range" id="f-progress" min="0" max="100" value="0"
+          oninput="document.getElementById('f-progress-label').textContent = this.value + '%'">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>最終更新日</label>
+      <div class="date-row">
+        <input type="date" id="f-updated">
+        <button class="btn-today" onclick="setToday()">今日</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>推奨アクション</label>
+      <div class="radio-group">
+        <label class="radio-label">
+          <input type="radio" name="action" value="状況確認（DM・電話）">
+          状況確認（DM・電話）
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="action" value="研修進捗を進めるよう促す">
+          研修進捗を進めるよう促す
+        </label>
+        <label class="radio-label">
+          <input type="radio" name="action" value="サポート不要（順調）" checked>
+          サポート不要（順調）
+        </label>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn-primary" onclick="saveMember()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'training-tracker-v1';
+let members = [];
+let editingId = null;
+
+// ---- データ ----
+function load() {
+  try { members = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { members = []; }
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(members));
+}
+
+function genId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+// ---- 優先度計算 ----
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function daysDiff(dateStr) {
+  if (!dateStr) return 9999;
+  const d = new Date(dateStr);
+  const t = new Date(today());
+  return Math.floor((t - d) / 86400000);
+}
+
+function calcPriority(m) {
+  const staleDays = daysDiff(m.lastUpdated);
+  const joinDays  = daysDiff(m.joinDate);
+
+  if (staleDays >= 3) return 'red';
+
+  if (m.status === '未着手' && joinDays >= 3) return 'yellow';
+  if (joinDays >= 7 && m.progress < 30) return 'yellow';
+
+  return 'green';
+}
+
+function priorityOrder(p) { return p === 'red' ? 0 : p === 'yellow' ? 1 : 2; }
+
+function priorityLabel(p) {
+  if (p === 'red')    return '<span class="badge badge-red">🔴 高</span>';
+  if (p === 'yellow') return '<span class="badge badge-yellow">🟡 中</span>';
+  return '<span class="badge badge-green">🟢 低</span>';
+}
+
+// ---- レンダリング ----
+function render() {
+  const sorted = [...members]
+    .map(m => ({ ...m, _priority: calcPriority(m) }))
+    .sort((a, b) => priorityOrder(a._priority) - priorityOrder(b._priority));
+
+  const cntRed    = sorted.filter(m => m._priority === 'red').length;
+  const cntYellow = sorted.filter(m => m._priority === 'yellow').length;
+  const cntGreen  = sorted.filter(m => m._priority === 'green').length;
+
+  document.getElementById('cnt-red').textContent    = cntRed;
+  document.getElementById('cnt-yellow').textContent = cntYellow;
+  document.getElementById('cnt-green').textContent  = cntGreen;
+
+  // アラート
+  const alertSection = document.getElementById('alert-section');
+  const alertCards   = document.getElementById('alert-cards');
+  const redMembers   = sorted.filter(m => m._priority === 'red');
+  if (redMembers.length > 0) {
+    alertSection.style.display = '';
+    alertCards.innerHTML = redMembers.map(m => {
+      const days = daysDiff(m.lastUpdated);
+      return `
+        <div class="alert-card">
+          <div>
+            <div class="name">${esc(m.name)}</div>
+            <div class="detail">最終更新から ${days} 日経過　最終更新：${m.lastUpdated || '未設定'}</div>
+          </div>
+          <span class="action-tag">${esc(m.action)}</span>
+        </div>`;
+    }).join('');
+  } else {
+    alertSection.style.display = 'none';
+  }
+
+  // テーブル
+  const tbody      = document.getElementById('table-body');
+  const emptyState = document.getElementById('empty-state');
+  const table      = document.getElementById('main-table');
+
+  if (sorted.length === 0) {
+    emptyState.style.display = '';
+    table.style.display = 'none';
+  } else {
+    emptyState.style.display = 'none';
+    table.style.display = '';
+    tbody.innerHTML = sorted.map(m => {
+      const staleDays = daysDiff(m.lastUpdated);
+      const stagnantCell = m._priority === 'red'
+        ? `<span class="stagnant-days">${staleDays}日</span>`
+        : (staleDays < 9999 ? `${staleDays}日` : '—');
+
+      return `
+        <tr class="row-${m._priority}" onclick="openModal('${m.id}')">
+          <td>${priorityLabel(m._priority)}</td>
+          <td><strong>${esc(m.name)}</strong></td>
+          <td>${m.joinDate || '—'}</td>
+          <td><span class="status-tag status-${m.status}">${m.status}</span></td>
+          <td>
+            <div class="progress-bar-wrap">
+              <div class="progress-bar"><div class="progress-bar-fill" style="width:${m.progress}%"></div></div>
+              <span>${m.progress}%</span>
+            </div>
+          </td>
+          <td>${m.lastUpdated || '—'}</td>
+          <td>${stagnantCell}</td>
+          <td>${esc(m.action)}</td>
+          <td onclick="event.stopPropagation()">
+            <button class="delete-btn" onclick="deleteMember('${m.id}')" title="削除">✕</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// ---- モーダル ----
+function openModal(id) {
+  editingId = id || null;
+  document.getElementById('modal-title').textContent = id ? 'メンバー編集' : 'メンバー追加';
+
+  if (id) {
+    const m = members.find(x => x.id === id);
+    if (!m) return;
+    document.getElementById('f-name').value  = m.name;
+    document.getElementById('f-join').value  = m.joinDate;
+    document.getElementById('f-status').value = m.status;
+    document.getElementById('f-progress').value = m.progress;
+    document.getElementById('f-progress-label').textContent = m.progress + '%';
+    document.getElementById('f-updated').value = m.lastUpdated;
+    document.querySelector(`input[name="action"][value="${m.action}"]`).checked = true;
+  } else {
+    document.getElementById('f-name').value    = '';
+    document.getElementById('f-join').value    = today();
+    document.getElementById('f-status').value  = '未着手';
+    document.getElementById('f-progress').value = 0;
+    document.getElementById('f-progress-label').textContent = '0%';
+    document.getElementById('f-updated').value = today();
+    document.querySelector('input[name="action"][value="サポート不要（順調）"]').checked = true;
+  }
+
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-name').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function onOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function setToday() {
+  document.getElementById('f-updated').value = today();
+}
+
+function saveMember() {
+  const name    = document.getElementById('f-name').value.trim();
+  const joinDate = document.getElementById('f-join').value;
+
+  if (!name) { alert('名前を入力してください'); return; }
+  if (!joinDate) { alert('ジョイン日を入力してください'); return; }
+
+  const data = {
+    name,
+    joinDate,
+    status:      document.getElementById('f-status').value,
+    progress:    Number(document.getElementById('f-progress').value),
+    lastUpdated: document.getElementById('f-updated').value,
+    action:      document.querySelector('input[name="action"]:checked').value,
+  };
+
+  if (editingId) {
+    const idx = members.findIndex(m => m.id === editingId);
+    if (idx >= 0) members[idx] = { ...members[idx], ...data };
+  } else {
+    members.push({ id: genId(), ...data });
+  }
+
+  save();
+  render();
+  closeModal();
+}
+
+function deleteMember(id) {
+  if (!confirm('このメンバーを削除しますか？')) return;
+  members = members.filter(m => m.id !== id);
+  save();
+  render();
+}
+
+// ---- 初期化 ----
+load();
+render();
+</script>
+</body>
+</html>
