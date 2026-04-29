@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>デザイン案 比較</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Hiragino Sans', sans-serif; background: #111; color: #fff; }
+
+h1 { text-align: center; padding: 20px; font-size: 18px; color: #f9ca24; }
+.option-label {
+  text-align: center; font-size: 20px; font-weight: 900;
+  padding: 16px 0 4px; color: #fff;
+  letter-spacing: 1px;
+}
+.option-desc {
+  text-align: center; font-size: 12px; color: rgba(255,255,255,0.6);
+  margin-bottom: 16px; padding: 0 20px;
+}
+.section { padding: 0 16px 40px; }
+hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 8px 0 32px; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   案A：大円メダリオン（スクショ風）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.a-card {
+  position: relative;
+  margin-bottom: 18px;
+  border-radius: 28px;
+  overflow: visible;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.a-card:active { transform: scale(0.97); }
+
+.a-card.gold  { background: linear-gradient(150deg,#3a2800,#7a5000,#2a1800); box-shadow: 0 12px 40px rgba(200,130,0,0.5), inset 0 1px 0 rgba(255,210,100,0.2); }
+.a-card.teal  { background: linear-gradient(150deg,#002820,#006050,#001a14); box-shadow: 0 12px 40px rgba(0,160,120,0.5), inset 0 1px 0 rgba(100,255,200,0.15); }
+.a-card.purple{ background: linear-gradient(150deg,#1a0040,#450090,#0e0028); box-shadow: 0 12px 40px rgba(100,0,220,0.5), inset 0 1px 0 rgba(180,150,255,0.15); }
+.a-card.blue  { background: linear-gradient(150deg,#001440,#003080,#000820); box-shadow: 0 12px 40px rgba(0,80,220,0.5), inset 0 1px 0 rgba(100,180,255,0.15); }
+
+/* 上部の飾り光 */
+.a-card::before {
+  content: ''; position: absolute; top: 0; left: 10%; right: 10%; height: 2px;
+  border-radius: 50%;
+}
+.a-card.gold::before  { background: linear-gradient(90deg,transparent,#f9ca24,transparent); }
+.a-card.teal::before  { background: linear-gradient(90deg,transparent,#00b894,transparent); }
+.a-card.purple::before{ background: linear-gradient(90deg,transparent,#a29bfe,transparent); }
+.a-card.blue::before  { background: linear-gradient(90deg,transparent,#74b9ff,transparent); }
+
+/* 大きな円形フレーム */
+.a-circle {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  margin: 20px auto 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: relative;
+}
+.a-card.gold   .a-circle { background: radial-gradient(circle at 35% 30%,#fffef5,#fff4c0,#ffe080); border: 6px solid #d4a017; box-shadow: 0 0 0 3px #f9ca24, 0 0 0 6px rgba(249,202,36,0.25), 0 8px 32px rgba(0,0,0,0.5); }
+.a-card.teal   .a-circle { background: radial-gradient(circle at 35% 30%,#f0fff8,#d0f5e8,#a0ecd0); border: 6px solid #00826e; box-shadow: 0 0 0 3px #00b894, 0 0 0 6px rgba(0,184,148,0.25), 0 8px 32px rgba(0,0,0,0.5); }
+.a-card.purple .a-circle { background: radial-gradient(circle at 35% 30%,#faf5ff,#ede0ff,#d8c0ff); border: 6px solid #5a2da8; box-shadow: 0 0 0 3px #a29bfe, 0 0 0 6px rgba(162,155,254,0.25), 0 8px 32px rgba(0,0,0,0.5); }
+.a-card.blue   .a-circle { background: radial-gradient(circle at 35% 30%,#f0f8ff,#d0e8ff,#a8d0ff); border: 6px solid #1a5cb8; box-shadow: 0 0 0 3px #74b9ff, 0 0 0 6px rgba(116,185,255,0.25), 0 8px 32px rgba(0,0,0,0.5); }
+
+.a-circle-icon { font-size: 52px; margin-bottom: 6px; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.3)); }
+.a-circle-name { font-size: 26px; font-weight: 900; }
+.a-card.gold   .a-circle-name { color: #7a4400; }
+.a-card.teal   .a-circle-name { color: #004d38; }
+.a-card.purple .a-circle-name { color: #3a006e; }
+.a-card.blue   .a-circle-name { color: #001e60; }
+.a-circle-sub { font-size: 10px; color: #666; margin-top: 3px; text-align: center; padding: 0 12px; line-height: 1.4; }
+
+/* 下部の情報バー */
+.a-footer { display: flex; align-items: center; justify-content: space-between; padding: 0 24px 18px; }
+.a-dots { display: flex; gap: 7px; }
+.a-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); }
+.a-dot.done { background: #00b894; border-color: #00b894; box-shadow: 0 0 8px rgba(0,184,148,0.7); }
+.a-dot.go   { background: #f9ca24; border-color: #f0932b; box-shadow: 0 0 8px rgba(249,202,36,0.7); }
+.a-score { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.8); }
+
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   案B：横長カード（RPG風）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.b-card {
+  border-radius: 20px; margin-bottom: 14px;
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.2s;
+  display: flex; align-items: stretch;
+  min-height: 100px;
+}
+.b-card:active { transform: scale(0.97); }
+
+.b-left {
+  width: 88px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 14px 8px;
+  position: relative;
+}
+.b-card.gold   .b-left { background: linear-gradient(160deg,#f9ca24,#e67e22); }
+.b-card.teal   .b-left { background: linear-gradient(160deg,#00b894,#00796b); }
+.b-card.purple .b-left { background: linear-gradient(160deg,#a29bfe,#6c5ce7); }
+.b-card.blue   .b-left { background: linear-gradient(160deg,#74b9ff,#1a5cb8); }
+
+.b-left-icon { font-size: 40px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4)); }
+.b-left-label { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.9); margin-top: 4px; text-align: center; }
+
+.b-right {
+  flex: 1; padding: 16px 18px;
+  display: flex; flex-direction: column; justify-content: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-left: none;
+  border-radius: 0 20px 20px 0;
+  backdrop-filter: blur(8px);
+}
+.b-name { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.b-desc { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.5; margin-bottom: 10px; }
+.b-meta { display: flex; align-items: center; justify-content: space-between; }
+.b-dots { display: flex; gap: 5px; }
+.b-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); }
+.b-dot.done { background: #00b894; border-color: #00b894; }
+.b-dot.go   { background: #f9ca24; border-color: #f0932b; }
+.b-badge { font-size: 10px; font-weight: 700; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 3px 10px; color: rgba(255,255,255,0.8); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   案C：2×2 大タイル（マップ風）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.c-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.c-card {
+  border-radius: 24px; padding: 0;
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.2s;
+  aspect-ratio: 1 / 1.15;
+  position: relative;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.c-card:active { transform: scale(0.96); }
+
+.c-card.gold   { background: linear-gradient(175deg,#a06000 0%,#3a2000 100%); box-shadow: 0 8px 28px rgba(180,110,0,0.5); }
+.c-card.teal   { background: linear-gradient(175deg,#006654 0%,#001e18 100%); box-shadow: 0 8px 28px rgba(0,140,110,0.5); }
+.c-card.purple { background: linear-gradient(175deg,#4a00a0 0%,#12003a 100%); box-shadow: 0 8px 28px rgba(80,0,180,0.5); }
+.c-card.blue   { background: linear-gradient(175deg,#1050c0 0%,#000e38 100%); box-shadow: 0 8px 28px rgba(0,70,200,0.5); }
+
+/* キラキラ光 */
+.c-card::before {
+  content: ''; position: absolute; inset: 0; border-radius: 24px;
+  background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.18) 0%, transparent 65%);
+}
+
+/* 上部：大きなアイコン */
+.c-icon-area {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+.c-icon { font-size: 56px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+
+/* 下部：テキストエリア */
+.c-info {
+  position: relative; z-index: 1;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  padding: 10px 12px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.c-name { font-size: 16px; font-weight: 900; color: #fff; margin-bottom: 2px; }
+.c-card.gold   .c-name { color: #ffd060; }
+.c-card.teal   .c-name { color: #60ffcc; }
+.c-card.purple .c-name { color: #c0a0ff; }
+.c-card.blue   .c-name { color: #80c8ff; }
+.c-sub { font-size: 9px; color: rgba(255,255,255,0.55); line-height: 1.4; margin-bottom: 6px; }
+.c-dots { display: flex; gap: 5px; }
+.c-dot { width: 9px; height: 9px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); }
+.c-dot.done { background: #00b894; border-color: #00b894; }
+.c-dot.go   { background: #f9ca24; border-color: #f0932b; }
+
+
+/* ページ全体レイアウト */
+.page-bg {
+  min-height: 100vh;
+  background: url('/cover.png') center top / cover no-repeat fixed;
+  position: relative;
+}
+.page-bg::before {
+  content: ''; position: fixed; inset: 0;
+  background: linear-gradient(to bottom, rgba(6,2,20,0.85) 0%, rgba(6,2,20,0.4) 40%, rgba(6,2,20,0.75) 100%);
+}
+.inner { position: relative; z-index: 1; padding: 0 16px 40px; }
+
+.nav-top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 16px 8px; position: relative; z-index: 1;
+}
+.nav-name { font-size: 16px; font-weight: 800; color: #fff; }
+.nav-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.title-area { position: relative; z-index: 1; text-align: center; padding: 4px 16px 16px; }
+.main-title { font-size: 20px; font-weight: 900; color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,0.7); }
+
+.choose-btn {
+  display: block; margin: 0 auto 10px;
+  padding: 10px 28px;
+  border-radius: 24px; font-size: 14px; font-weight: 800;
+  border: 2px solid rgba(249,202,36,0.6);
+  background: rgba(249,202,36,0.15);
+  color: #f9ca24; cursor: pointer; font-family: inherit;
+  transition: background 0.2s;
+}
+.choose-btn:hover { background: rgba(249,202,36,0.3); }
+.choose-btn.selected { background: #f9ca24; color: #1a0a00; border-color: #f9ca24; }
+</style>
+</head>
+<body>
+<div class="page-bg">
+  <div class="nav-top">
+    <div class="nav-name">テストユーザー さん</div>
+    <button class="nav-btn">ログアウト</button>
+  </div>
+  <div class="title-area">
+    <div class="main-title">🗺 シーディングトーク習得マップ</div>
+  </div>
+
+  <!-- 案A -->
+  <div class="inner">
+    <p style="text-align:center;font-size:22px;font-weight:900;color:#f9ca24;margin-bottom:4px;">案A ｜ 大円メダリオン型</p>
+    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:18px;">スクリーンショットに最も近いスタイル。大きな円形の額縁が印象的。縦1列。</p>
+
+    <div class="a-card gold">
+      <div class="a-circle">
+        <div class="a-circle-icon">💰</div>
+        <div class="a-circle-name">金額</div>
+        <div class="a-circle-sub">お金の不安をなくし、<br>価値を伝えて前に進む！</div>
+      </div>
+      <div class="a-footer">
+        <div class="a-dots">
+          <div class="a-dot done"></div>
+          <div class="a-dot go"></div>
+          <div class="a-dot"></div>
+        </div>
+        <div class="a-score">最高 85点</div>
+      </div>
+    </div>
+
+    <div class="a-card teal">
+      <div class="a-circle">
+        <div class="a-circle-icon">⏰</div>
+        <div class="a-circle-name">時間</div>
+        <div class="a-circle-sub">忙しくても時間は作れる！<br>行動できる未来へ導く！</div>
+      </div>
+      <div class="a-footer">
+        <div class="a-dots">
+          <div class="a-dot done"></div>
+          <div class="a-dot"></div>
+          <div class="a-dot"></div>
+        </div>
+        <div class="a-score">最高 72点</div>
+      </div>
+    </div>
+
+    <div class="a-card purple">
+      <div class="a-circle">
+        <div class="a-circle-icon">💬</div>
+        <div class="a-circle-name">相談</div>
+        <div class="a-circle-sub">自分の未来を<br>自分で決める！</div>
+      </div>
+      <div class="a-footer">
+        <div class="a-dots">
+          <div class="a-dot"></div>
+          <div class="a-dot"></div>
+          <div class="a-dot"></div>
+        </div>
+        <div class="a-score">未挑戦</div>
+      </div>
+    </div>
+
+    <div class="a-card blue">
+      <div class="a-circle">
+        <div class="a-circle-icon">⚖️</div>
+        <div class="a-circle-name">他社比較</div>
+        <div class="a-circle-sub">比較の不安を解消し<br>最適な選択をサポート！</div>
+      </div>
+      <div class="a-footer">
+        <div class="a-dots">
+          <div class="a-dot"></div>
+          <div class="a-dot"></div>
+          <div class="a-dot"></div>
+        </div>
+        <div class="a-score">未挑戦</div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 案B -->
+  <div class="inner">
+    <p style="text-align:center;font-size:22px;font-weight:900;color:#a29bfe;margin-bottom:4px;">案B ｜ 横長カード型</p>
+    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:18px;">左に大きなアイコン、右にテキスト。RPGのメニュー画面風。コンパクトで全部見える。</p>
+
+    <div class="b-card gold">
+      <div class="b-left">
+        <div class="b-left-icon">💰</div>
+        <div class="b-left-label">金額</div>
+      </div>
+      <div class="b-right">
+        <div class="b-name">金額渋りトーク</div>
+        <div class="b-desc">お金の不安をなくし、価値を伝えて前に進む！</div>
+        <div class="b-meta">
+          <div class="b-dots">
+            <div class="b-dot done"></div><div class="b-dot go"></div><div class="b-dot"></div>
+          </div>
+          <div class="b-badge">最高 85点</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-card teal">
+      <div class="b-left">
+        <div class="b-left-icon">⏰</div>
+        <div class="b-left-label">時間</div>
+      </div>
+      <div class="b-right">
+        <div class="b-name">時間渋りトーク</div>
+        <div class="b-desc">忙しくても時間は作れる！行動できる未来へ！</div>
+        <div class="b-meta">
+          <div class="b-dots">
+            <div class="b-dot done"></div><div class="b-dot"></div><div class="b-dot"></div>
+          </div>
+          <div class="b-badge">最高 72点</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-card purple">
+      <div class="b-left">
+        <div class="b-left-icon">💬</div>
+        <div class="b-left-label">相談</div>
+      </div>
+      <div class="b-right">
+        <div class="b-name">相談渋りトーク</div>
+        <div class="b-desc">大切な人の意見も尊重しながら、自分で決める！</div>
+        <div class="b-meta">
+          <div class="b-dots">
+            <div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div>
+          </div>
+          <div class="b-badge">未挑戦</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-card blue">
+      <div class="b-left">
+        <div class="b-left-icon">⚖️</div>
+        <div class="b-left-label">比較</div>
+      </div>
+      <div class="b-right">
+        <div class="b-name">他社比較渋りトーク</div>
+        <div class="b-desc">比較の不安を解消し、最適な選択をサポート！</div>
+        <div class="b-meta">
+          <div class="b-dots">
+            <div class="b-dot"></div><div class="b-dot"></div><div class="b-dot"></div>
+          </div>
+          <div class="b-badge">未挑戦</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 案C -->
+  <div class="inner">
+    <p style="text-align:center;font-size:22px;font-weight:900;color:#74b9ff;margin-bottom:4px;">案C ｜ 2×2 大タイル型</p>
+    <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:18px;">2列グリッドで大きなアイコンが映える。ゲームのキャラ・マップ選択風。</p>
+
+    <div class="c-grid">
+      <div class="c-card gold">
+        <div class="c-icon-area"><div class="c-icon">💰</div></div>
+        <div class="c-info">
+          <div class="c-name">金額</div>
+          <div class="c-sub">お金の不安をなくし<br>価値を伝えて前へ！</div>
+          <div class="c-dots">
+            <div class="c-dot done"></div><div class="c-dot go"></div><div class="c-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c-card teal">
+        <div class="c-icon-area"><div class="c-icon">⏰</div></div>
+        <div class="c-info">
+          <div class="c-name">時間</div>
+          <div class="c-sub">忙しくても<br>時間は作れる！</div>
+          <div class="c-dots">
+            <div class="c-dot done"></div><div class="c-dot"></div><div class="c-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c-card purple">
+        <div class="c-icon-area"><div class="c-icon">💬</div></div>
+        <div class="c-info">
+          <div class="c-name">相談</div>
+          <div class="c-sub">自分の未来を<br>自分で決める！</div>
+          <div class="c-dots">
+            <div class="c-dot"></div><div class="c-dot"></div><div class="c-dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="c-card blue">
+        <div class="c-icon-area"><div class="c-icon">⚖️</div></div>
+        <div class="c-info">
+          <div class="c-name">他社比較</div>
+          <div class="c-sub">比較の不安を<br>解消する！</div>
+          <div class="c-dots">
+            <div class="c-dot"></div><div class="c-dot"></div><div class="c-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

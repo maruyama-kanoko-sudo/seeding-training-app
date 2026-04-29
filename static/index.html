@@ -2,15 +2,206 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>シーディングトレーニング</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="/static/style.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>シーディングトーク習得</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div id="app"></div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/static/app.js"></script>
+
+<!-- ── Cover / Login ── -->
+<div id="cover-screen" class="screen">
+  <div class="overlay"></div>
+  <div class="cover-content">
+    <div class="cover-title">🏰 シーディングトーク<br>習得の世界へ</div>
+    <div class="cover-subtitle">SEEDING TALK MASTER</div>
+    <div class="cover-form">
+      <h3>名前とメールを入力してスタート</h3>
+      <input id="login-name" class="form-input" type="text" placeholder="お名前" autocomplete="name">
+      <input id="login-email" class="form-input" type="email" placeholder="メールアドレス" autocomplete="email">
+      <button class="btn-primary" onclick="App.login()">冒険を始める ✨</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Home (Fantasy Map) ── -->
+<div id="home-screen" class="screen">
+  <div class="home-bg-overlay"></div>
+  <div class="home-topbar">
+    <div class="home-user-block">
+      <div class="home-username" id="home-username">冒険者</div>
+      <div class="home-score-text" id="home-score-text">最新スコア: ---</div>
+    </div>
+    <button class="btn-logout" onclick="App.logout()">ログアウト</button>
+  </div>
+  <div class="home-title-area">
+    <div class="home-main-title">🗺 シーディングトーク習得マップ</div>
+    <div class="home-sub-title">渋りの島を攻略して、即決マスターへ！</div>
+  </div>
+  <div class="home-flex-spacer"></div>
+  <div id="home-islands" class="home-islands">
+    <!-- JS generated island cards -->
+  </div>
+  <nav class="bottom-nav" style="background:rgba(10,5,30,0.7);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.12);">
+    <button class="nav-item active" onclick="App.showHome()" style="color:#f9ca24;"><span class="nav-icon">🗺</span>マップ</button>
+    <button class="nav-item" onclick="App.showHistory()" style="color:rgba(255,255,255,0.7);"><span class="nav-icon">📋</span>履歴</button>
+    <button class="nav-item" id="nav-admin-home" style="display:none;color:rgba(255,255,255,0.7);" onclick="App.showAdmin()"><span class="nav-icon">⚙️</span>管理</button>
+  </nav>
+</div>
+
+<!-- ── Mode Selection ── -->
+<div id="mode-screen" class="screen">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="mode-screen-title">モード選択</div>
+      <div class="topbar-sub">挑戦するモードを選んでください</div>
+    </div>
+    <button class="btn-outline btn-sm" onclick="App.showHome()">← 戻る</button>
+  </div>
+  <div class="page-content">
+    <div class="mode-grid">
+      <!-- クイック暗記 -->
+      <div class="mode-card" id="mode-card-quick" onclick="App.startMode('quick')">
+        <div class="mode-icon">⚡</div>
+        <div class="mode-info">
+          <div class="mode-name">クイック暗記</div>
+          <div class="mode-desc">穴埋め・並び替えでキーフレーズを定着させよう</div>
+          <div class="mode-meta">
+            <span class="mode-time">約5分</span>
+            <span class="mode-best none" id="mode-best-quick">未挑戦</span>
+          </div>
+          <div class="mode-lock-msg" id="mode-lock-quick"></div>
+        </div>
+      </div>
+      <!-- 再現チャレンジ -->
+      <div class="mode-card" id="mode-card-repro" onclick="App.startMode('reproduction')">
+        <div class="mode-icon">📝</div>
+        <div class="mode-info">
+          <div class="mode-name">再現チャレンジ</div>
+          <div class="mode-desc">お客様の発言にトークを再現して書いてみよう</div>
+          <div class="mode-meta">
+            <span class="mode-time">約10分</span>
+            <span class="mode-best none" id="mode-best-repro">未挑戦</span>
+          </div>
+          <div class="mode-lock-msg" id="mode-lock-repro"></div>
+        </div>
+      </div>
+      <!-- 実戦シミュレーション -->
+      <div class="mode-card" id="mode-card-sim" onclick="App.startMode('simulation')">
+        <div class="mode-icon">🎯</div>
+        <div class="mode-info">
+          <div class="mode-name">実戦シミュレーション</div>
+          <div class="mode-desc">複合渋りに対応！実際の現場に近い難しい問題</div>
+          <div class="mode-meta">
+            <span class="mode-time">約15分</span>
+            <span class="mode-best none" id="mode-best-sim">未挑戦</span>
+          </div>
+          <div class="mode-lock-msg" id="mode-lock-sim"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Quiz ── -->
+<div id="quiz-screen" class="screen">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title" id="quiz-mode-label">クイック暗記</div>
+      <div class="topbar-sub" id="quiz-cat-label"></div>
+    </div>
+    <button class="btn-outline btn-sm" onclick="App.showHome()">中断</button>
+  </div>
+  <div class="page-content">
+    <div class="quiz-header">
+      <span class="quiz-counter" id="quiz-counter">1/1</span>
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="quiz-bar"></div></div>
+    </div>
+    <div id="quiz-body"></div>
+    <button id="quiz-submit-btn" class="btn-primary mt-16" onclick="App.submitAnswer()">回答する</button>
+  </div>
+</div>
+
+<!-- ── Feedback ── -->
+<div id="feedback-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-title">フィードバック</div>
+  </div>
+  <div class="page-content" id="feedback-body"></div>
+</div>
+
+<!-- ── Celebration ── -->
+<div id="celebration-screen" class="screen">
+  <div id="confetti-container"></div>
+  <div class="celeb-glow"></div>
+  <div class="celeb-content">
+    <span class="celeb-crown">👑</span>
+    <div class="celeb-title">合格おめでとう！</div>
+    <div class="celeb-subtitle">実戦シミュレーション クリア</div>
+    <div class="celeb-score" id="celeb-score">85</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:8px;">点</div>
+    <div class="celeb-stars">⭐⭐⭐</div>
+    <div class="celeb-msg" id="celeb-msg">あなたはシーディングマスターへの道を歩んでいます！<br>このトークを現場で使い続けよう！</div>
+    <button class="btn-gold mt-16" onclick="App.showHome()">マップに戻る 🗺</button>
+  </div>
+</div>
+
+<!-- ── History ── -->
+<div id="history-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-title">履歴</div>
+  </div>
+  <div class="page-content">
+    <div class="mode-stats-row">
+      <div class="stat-box">
+        <div class="stat-box-label">⚡ クイック</div>
+        <div class="stat-box-best" id="stat-quick-best">--</div>
+        <div class="stat-box-count" id="stat-quick-count">0回</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">📝 再現</div>
+        <div class="stat-box-best" id="stat-repro-best">--</div>
+        <div class="stat-box-count" id="stat-repro-count">0回</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">🎯 実戦</div>
+        <div class="stat-box-best" id="stat-sim-best">--</div>
+        <div class="stat-box-count" id="stat-sim-count">0回</div>
+      </div>
+    </div>
+    <div id="history-list"></div>
+  </div>
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="App.showHome()"><span class="nav-icon">🏠</span>ホーム</button>
+    <button class="nav-item active" onclick="App.showHistory()"><span class="nav-icon">📋</span>履歴</button>
+    <button class="nav-item" id="nav-admin-history" style="display:none" onclick="App.showAdmin()"><span class="nav-icon">⚙️</span>管理</button>
+  </nav>
+</div>
+
+<!-- ── Admin ── -->
+<div id="admin-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-title">管理ダッシュボード</div>
+  </div>
+  <div class="page-content" id="admin-body"></div>
+  <nav class="bottom-nav">
+    <button class="nav-item" onclick="App.showHome()"><span class="nav-icon">🏠</span>ホーム</button>
+    <button class="nav-item" onclick="App.showHistory()"><span class="nav-icon">📋</span>履歴</button>
+    <button class="nav-item active" onclick="App.showAdmin()"><span class="nav-icon">⚙️</span>管理</button>
+  </nav>
+</div>
+
+<!-- ── Member Detail ── -->
+<div id="member-detail-screen" class="screen">
+  <div class="topbar">
+    <div class="topbar-title" id="member-detail-title">メンバー詳細</div>
+    <button class="btn-outline btn-sm" onclick="App.showAdmin()">← 戻る</button>
+  </div>
+  <div class="page-content" id="member-detail-body"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="/app.js"></script>
 </body>
 </html>
