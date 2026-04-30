@@ -10,9 +10,13 @@ from functools import wraps
 load_dotenv()
 
 app = Flask(__name__, static_folder='static', static_url_path='')
+_db_url = os.getenv('DATABASE_URL', 'sqlite:///seeding.db')
+if _db_url.startswith('postgres://'):
+    _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+
 app.config.update(
     SECRET_KEY=os.getenv('SECRET_KEY', 'seeding-secret-2024'),
-    SQLALCHEMY_DATABASE_URI='sqlite:///seeding.db',
+    SQLALCHEMY_DATABASE_URI=_db_url,
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SESSION_COOKIE_SAMESITE='Lax',
     SESSION_COOKIE_HTTPONLY=True,
@@ -651,17 +655,25 @@ def submit_answer():
 @app.route('/api/answers', methods=['GET'])
 @login_required
 def get_answers():
-    user_id = request.args.get('user_id', session['user_id'], type=int)
     current = User.query.get(session['user_id'])
-    if user_id != session['user_id'] and current.role != 'admin':
-        return jsonify({'error': '権限がありません'}), 403
-    answers = Answer.query.filter_by(user_id=user_id).order_by(Answer.created_at.desc()).limit(50).all()
+    all_users = request.args.get('all_users') == '1'
+
+    if all_users and current.role == 'admin':
+        answers = (Answer.query
+                   .order_by(Answer.created_at.desc()).limit(100).all())
+    else:
+        user_id = request.args.get('user_id', session['user_id'], type=int)
+        if user_id != session['user_id'] and current.role != 'admin':
+            return jsonify({'error': '権限がありません'}), 403
+        answers = Answer.query.filter_by(user_id=user_id).order_by(Answer.created_at.desc()).limit(50).all()
+
     result = []
     for a in answers:
         d = a.to_dict()
         d['question'] = a.question.to_dict() if a.question else None
         d['category_name'] = (Category.query.get(a.question.category_id).name if a.question else None)
         d['admin_comments'] = [c.to_dict() for c in a.comments]
+        d['user_name'] = a.user.name if a.user else None
         result.append(d)
     return jsonify({'answers': result})
 
@@ -754,4 +766,5 @@ with app.app_context():
     seed_db()
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(debug=os.getenv('RAILWAY_ENVIRONMENT') is None, host='0.0.0.0', port=port)

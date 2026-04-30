@@ -585,8 +585,10 @@ const App = (() => {
       if (countEl) countEl.textContent = (s.count || 0) + '回';
     });
 
-    // Load answer history
-    const data = await api('/answers');
+    // Load answer history — admin は全員分
+    const isAdmin = state.user && state.user.role === 'admin';
+    const url = isAdmin ? '/answers?all_users=1' : '/answers';
+    const data = await api(url);
     const list = document.getElementById('history-list');
     if (!data.answers || data.answers.length === 0) {
       list.innerHTML = '<div class="text-center text-muted" style="padding:40px;">まだ学習記録がありません</div>';
@@ -599,14 +601,18 @@ const App = (() => {
         { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
       const fb = a.ai_feedback || {};
       const qMode = a.question ? (modeMap[a.question.mode] || a.question.mode) : '';
+      const nameBadge = isAdmin && a.user_name
+        ? `<span class="badge badge-purple" style="font-size:12px;font-weight:800;">👤 ${escHtml(a.user_name)}</span>`
+        : '';
       return `
         <div class="history-item" onclick="App.toggleHistory(${i})">
           <div class="history-item-header">
-            <div>
+            <div style="min-width:0;">
+              ${nameBadge ? `<div style="margin-bottom:4px;">${nameBadge}</div>` : ''}
               <div class="history-cat">${escHtml(a.category_name || '')} <span class="badge badge-purple">${qMode}</span></div>
               <div class="history-date">${date}</div>
             </div>
-            <div class="history-score ${a.is_passed ? 'passed' : ''}">${a.score_total}点</div>
+            <div class="history-score ${a.is_passed ? 'passed' : ''}" style="flex-shrink:0;margin-left:8px;">${a.score_total}点</div>
           </div>
           <div class="history-detail" id="hist-detail-${i}">
             <div style="font-size:13px;font-weight:700;margin-bottom:6px;">称号：${escHtml(a.title || '')}</div>
