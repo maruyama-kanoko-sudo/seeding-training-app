@@ -276,7 +276,13 @@ const App = (() => {
   }
 
   function renderFillBlank(q) {
+    const contextHtml = q.context_text ? `
+      <div class="fill-context-box">
+        <div class="fill-context-label">📖 トークの文脈</div>
+        <div class="fill-context-text">${escHtml(q.context_text)}</div>
+      </div>` : '';
     return `
+      ${contextHtml}
       <div class="customer-bubble">${escHtml(q.customer_text || '')}</div>
       <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:12px;">
         ${escHtml(q.prompt_text || '【　】に入る言葉は？')}
@@ -520,6 +526,15 @@ const App = (() => {
 
     if (answer.has_compliance_ng && answer.compliance_ng_words && answer.compliance_ng_words.length) {
       html += `<div class="compliance-warning">⚠️ コンプライアンスNG：${escHtml(answer.compliance_ng_words.join('、'))}</div>`;
+    }
+
+    // 穴埋め問題のフレーズ理由
+    if (q && q.question_type === 'fill_blank' && q.phrase_reason) {
+      html += `
+        <div class="card phrase-reason-card">
+          <div class="card-title">💡 なぜこの言葉が重要？</div>
+          <div class="phrase-reason-text">${escHtml(q.phrase_reason)}</div>
+        </div>`;
     }
 
     if (feedback) {
