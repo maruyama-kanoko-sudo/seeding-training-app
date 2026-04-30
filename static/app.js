@@ -327,6 +327,7 @@ const App = (() => {
       <div style="font-size:13px;color:var(--text-light);margin-bottom:12px;">${escHtml(q.prompt_text || '')}</div>
       ${hintHtml}
       <textarea id="free-textarea" class="answer-textarea" placeholder="ここにトークを入力してください..."></textarea>
+      <button id="voice-btn" class="btn-voice" onclick="App.toggleVoice()" title="音声入力">🎤 音声入力</button>
       <button id="free-submit-btn" class="btn-primary mt-16" onclick="App.submitFree()">🤖 AI採点する</button>`;
   }
 
@@ -336,6 +337,58 @@ const App = (() => {
     if (!content || !arrow) return;
     content.classList.toggle('open');
     arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+  }
+
+  // ── Voice Input ────────────────────────────────────────────────────────
+  let _recognition = null;
+  let _isRecording = false;
+
+  function toggleVoice() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast('⚠️ このブラウザは音声入力に対応していません（Chrome推奨）');
+      return;
+    }
+    if (_isRecording) {
+      _recognition && _recognition.stop();
+      return;
+    }
+    _recognition = new SpeechRecognition();
+    _recognition.lang = 'ja-JP';
+    _recognition.continuous = true;
+    _recognition.interimResults = true;
+
+    const btn = document.getElementById('voice-btn');
+    const textarea = document.getElementById('free-textarea');
+    let baseText = textarea ? textarea.value : '';
+    let interimText = '';
+
+    _recognition.onstart = () => {
+      _isRecording = true;
+      if (btn) { btn.textContent = '⏹ 停止する'; btn.classList.add('recording'); }
+    };
+    _recognition.onresult = (e) => {
+      interimText = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) {
+          baseText += e.results[i][0].transcript;
+        } else {
+          interimText += e.results[i][0].transcript;
+        }
+      }
+      if (textarea) textarea.value = baseText + interimText;
+    };
+    _recognition.onend = () => {
+      _isRecording = false;
+      if (textarea) textarea.value = baseText;
+      if (btn) { btn.textContent = '🎤 音声入力'; btn.classList.remove('recording'); }
+    };
+    _recognition.onerror = (e) => {
+      _isRecording = false;
+      if (btn) { btn.textContent = '🎤 音声入力'; btn.classList.remove('recording'); }
+      if (e.error !== 'no-speech') toast('⚠️ 音声入力エラー: ' + e.error);
+    };
+    _recognition.start();
   }
 
   // ── Submit ─────────────────────────────────────────────────────────────
@@ -768,7 +821,7 @@ const App = (() => {
   return {
     login, logout, showHome, showHistory, showAdmin,
     selectCategory, startMode,
-    submitAnswer, submitFree, toggleHint, toggleIdeal,
+    submitAnswer, submitFree, toggleHint, toggleIdeal, toggleVoice,
     selectReorderChip, removeReorderItem, resetReorder,
     nextQuestion, toggleHistory,
     showMemberDetail, addComment,

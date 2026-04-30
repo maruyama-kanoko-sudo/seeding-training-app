@@ -407,12 +407,14 @@ def seed_additional_questions():
 
 def ai_score(mode, category_name, customer_text, talk_display_name, full_script, key_phrases, required_points, answer_text):
     sys_prompt = """あなたは営業トークの採点AIです。
-新人営業がプレ即決率を上げるためのシーディングトークを、現場で再現できるようにすることが目的です。
+新人営業がプレ即決率を上げるためのシーディングトークを、現場で使いこなせるようにすることが目的です。
 
 【重要方針】
-- 暗記寄りで評価する（模範スクリプトに近いほど高得点）
+- 丸暗記ではなく「目的・意図を理解してトークを打てているか」を最重要評価軸にする
+- トークの核心（共感→第三者事例→自己決断の促し→質問）の流れが伝わっているかを重視する
+- 言葉が多少違っても、お客様の不安を受け止めて前向きに導けていれば高評価
+- 模範スクリプトの丸コピーでも、意図を理解して使えていれば評価する（ただし棒読み感がある場合は指摘）
 - 平均営業が70点を取れる基準にする
-- 甘すぎず、改善点が分かる評価にする
 - フィードバックは新人営業が次に直せる具体的な言葉で出す
 - コンプライアンスNGは減点する（1件につき-30点）
 - 成果保証・圧迫・断定表現は厳しく評価する
@@ -423,23 +425,33 @@ def ai_score(mode, category_name, customer_text, talk_display_name, full_script,
 
 【モード】{mode}
 【カテゴリ】{category_name}
-【お客様発言】{customer_text}
+【カウンセラーへの発言】{customer_text}
 【指定トーク】{talk_display_name}
-【模範スクリプト】
+【模範スクリプト（参考）】
 {full_script}
-【必須キーフレーズ】{json.dumps(key_phrases, ensure_ascii=False)}
-【必須チェック項目】{json.dumps(required_points, ensure_ascii=False)}
+【必須要素（意図・目的として押さえるべきポイント）】{json.dumps(required_points, ensure_ascii=False)}
+【キーフレーズ例（言葉より意味が伝わっているかを重視）】{json.dumps(key_phrases, ensure_ascii=False)}
 【ユーザー回答】
 {answer_text}
 
 【採点基準】100点満点
-構造評価60点：共感・承認12点、本質の言語化12点、第三者トーク12点、未来提示・行動正当化12点、クロージング設計12点
-マストトーク再現度40点：指定トークに合っている8点、話の流れ8点、キーフレーズ8点、具体エピソード8点、最後が質問で終わる8点
+意図・目的の理解度60点：
+  相手の不安への共感・受け入れ（12点）、
+  伝えたいことの本質の言語化（12点）、
+  第三者事例を使って説得力を出せているか（12点）、
+  相手が前向きになれる未来提示・行動の正当化（12点）、
+  最後に相手に考えさせる質問で締めているか（12点）
+トーク再現の完成度40点：
+  この渋りカテゴリに合ったトーク内容か（8点）、
+  話の流れが自然で伝わりやすいか（8点）、
+  必須キーフレーズの意味が伝わっているか（8点）、
+  具体的なエピソードが含まれているか（8点）、
+  最後が質問で終わっているか（8点）
 
 コンプライアンスNG（含む場合-30点/件）：絶対稼げます、元取れます、やるべき、やらないと損、強制・圧迫表現、成果保証表現
 
 【出力形式】必ずJSONのみで返してください：
-{{"score_total":数値,"is_passed":真偽,"score_structure":数値,"score_reproduction":数値,"has_compliance_ng":真偽,"compliance_ng_words":[],"structure_detail":{{"empathy":数値,"essence":数値,"third_party":数値,"future":数値,"closing":数値}},"reproduction_detail":{{"category_match":数値,"flow":数値,"key_phrases":数値,"episode":数値,"closing_question":数値}},"good_points":["良かった点"],"improvement_points":["改善点"],"missing_key_phrases":["未使用フレーズ"],"safe_rewrite":"","ideal_answer":"理想のトーク例（150字程度）"}}"""
+{{"score_total":数値,"is_passed":真偽,"score_structure":数値,"score_reproduction":数値,"has_compliance_ng":真偽,"compliance_ng_words":[],"structure_detail":{{"empathy":数値,"essence":数値,"third_party":数値,"future":数値,"closing":数値}},"reproduction_detail":{{"category_match":数値,"flow":数値,"key_phrases":数値,"episode":数値,"closing_question":数値}},"good_points":["良かった点"],"improvement_points":["改善点"],"missing_key_phrases":["意図が伝わっていなかった要素"],"safe_rewrite":"","ideal_answer":"理想のトーク例（150字程度）"}}"""
 
     resp = client.messages.create(
         model='claude-haiku-4-5-20251001',
