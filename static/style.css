@@ -281,7 +281,7 @@ body { font-family: 'Hiragino Sans', 'Meiryo', sans-serif; background: var(--bg)
 .quiz-progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), #a29bfe); border-radius: 3px; transition: width 0.3s ease; }
 .quiz-counter { font-size: 12px; color: var(--text-light); font-weight: 700; white-space: nowrap; }
 .customer-bubble { background: #f0eeff; border-radius: 18px 18px 18px 4px; padding: 16px 18px; margin-bottom: 18px; }
-.customer-bubble::before { content: '👤 カウンセラーへの発言'; display: block; font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.customer-bubble::before { content: '👤 カウンセラー'; display: block; font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
 .btn-voice { display: block; width: 100%; margin-top: 10px; padding: 12px; border: 2px solid var(--primary); border-radius: 12px; background: #fff; color: var(--primary); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
 .btn-voice:hover { background: #f0eeff; }
 .btn-voice.recording { background: #ffe0e0; border-color: #e55; color: #e55; animation: pulse 1s infinite; }
