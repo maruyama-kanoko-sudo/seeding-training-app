@@ -692,11 +692,14 @@ def get_questions():
         if question.question_type == 'fill_blank':
             # Add phrase reason
             d['phrase_reason'] = PHRASE_REASONS.get(question.customer_text)
-            # Add context from script
+            # Add context from script (with answer hidden)
             if question.talk_template_id:
                 tmpl = templates.get(question.talk_template_id)
                 if tmpl:
-                    d['context_text'] = extract_context(tmpl.full_script, question.customer_text or '')
+                    ctx = extract_context(tmpl.full_script, question.customer_text or '')
+                    if ctx and question.correct_answer:
+                        ctx = ctx.replace(question.correct_answer, '（　　）')
+                    d['context_text'] = ctx
         result.append(d)
 
     return jsonify({'questions': result})
