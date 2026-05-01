@@ -283,7 +283,7 @@ const App = (() => {
       </div>` : '';
     return `
       ${contextHtml}
-      <div class="customer-bubble">${escHtml(q.customer_text || '')}</div>
+      <div class="counselor-bubble">${escHtml(q.customer_text || '')}</div>
       <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:12px;">
         ${escHtml(q.prompt_text || '【　】に入る言葉は？')}
       </div>

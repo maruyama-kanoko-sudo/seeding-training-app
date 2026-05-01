@@ -246,21 +246,27 @@ IKUMI_SCRIPT = """時間の不安、めちゃくちゃ分かります。実際�
 
 〇〇さんも、もしやるとしたらでいいんですけど、今の生活の中でどこなら少しでも時間作れそうか、一緒に見てみます？"""
 
-YAMAKITA_SCRIPT = """相談したいって思うの、すごく大事なことだと思いますし、心配になる気持ちもすごく分かります。
+YAMAKITA_SCRIPT = """旦那さんに、最初は反対されてたみたいで。やっぱり一番応援してほしい人に反対されるのって、正直かなりしんどいじゃないですか。
 
-前に山北さんっていう方がいて、旦那さんに最初すごく反対されてたんですよね。
+私も旦那さんの気持ちはすごく分かって。反対というより、「心配」ですよね。これから子どもにもお金かかるのに大丈夫？とか、ただでさえ忙しいのに本当に続けられるの？とか。
 
-やっぱり"お金大丈夫なの？"とか"時間取れるの？"って、心配から反対されるケースってすごく多くて。
+でも山北さんは、「結局、自分の人生だからやらないと何も変わらない」っていうところで、始められたんですよね。
 
-その中で山北さんが言ってたのが、"結局自分の人生だから、自分で決めないと何も変わらない"って。
+何より印象的だったのが、「旦那さんに反対されたからできなかった」っていう理由を、絶対に作りたくなかったっていう話で。
 
-もしその時にやらなかったら、"あの時やっておけばよかったな"って絶対後悔するし、その時に旦那さんに反対されたからって人のせいにしてしまいそうだったって言ってて。
+もしあの時やらなくて、後から「あの時やっておけばよかったな」って思った時に、絶対後悔するし、旦那さんのせいにしてしまう気がしたらしくて。
 
-それが嫌だったから、自分で決断して始められたらしいんです。
+それが嫌だったから、後悔しない選択をしたって言ってました。
 
-最初はやっぱり大変だったみたいなんですけど、結果が出てから旦那さんに初めて認めてもらえて、"あの時やってよかった"って言ってましたね。
+実際、忙しい中でも時間を作って頑張って、40時間で5万円プラスの収益が出てるんですよね。
 
-なので、相談すること自体は全然いいと思うんですけど、〇〇さんとしては、やりたい気持ちとやりたくない気持ちだったら、どっちが強いですか？"""
+その収益で、旦那さんとお子さんを連れてご飯に行ったらしいんですけど、その時に初めて「すごく頑張ったね」って認めてもらえたらしくて。
+
+それが一番嬉しかったって言ってました。
+
+「こんなことなら結果出てから言えばよかった〜（笑）」とも言ってましたけどね😂
+
+なので、〇〇さんとしては、やりたい気持ちとやりたくない気持ちだったら、どっちが強いですか？"""
 
 MAKO_SCRIPT = """他社も見たいっていう気持ち、全然自然だと思います。
 
@@ -298,8 +304,8 @@ def seed_db():
     rp1 = json.dumps(["共感・受け入れから始める","はるかさんの実例を使う（医療事務、手取り15万）","具体的な数字を入れる（120万円）","最後は質問で締める"], ensure_ascii=False)
     kp2 = json.dumps(["時間ってできるものじゃなくて作るものなんだな","10分単位で全部洗い出したら","進捗率も200%超えてた","一緒に見てみます"], ensure_ascii=False)
     rp2 = json.dumps(["共感から始める","いくみさんの実例を使う（イベント会社・照明・月1日休み）","「時間は作るもの」というキーフレーズを入れる","最後は一緒に考える提案で締める"], ensure_ascii=False)
-    kp3 = json.dumps(["結局自分の人生だから、自分で決めないと何も変わらない","人のせいにしてしまいそうだった","やりたい気持ちとやりたくない気持ちだったら、どっちが強いですか"], ensure_ascii=False)
-    rp3 = json.dumps(["相談したい気持ちに共感する","山北さんの実例を使う（旦那さんに反対された）","自分で決断することの大切さを伝える","最後はやりたい気持ちを確認する質問で締める"], ensure_ascii=False)
+    kp3 = json.dumps(["結局、自分の人生だからやらないと何も変わらない","旦那さんに反対されたからできなかった」っていう理由を、絶対に作りたくなかった","あの時やっておけばよかったな","後悔しない選択をした","40時間で5万円プラスの収益"], ensure_ascii=False)
+    rp3 = json.dumps(["一番応援してほしい人に反対されるしんどさに共感する","反対を「心配」として捉え直す","山北さんの実例を使う（旦那さんに反対された）","自分で決断することの大切さを伝える（後悔しない選択）","具体的な成果を伝える（40時間で5万円）","最後はやりたい気持ちを確認する質問で締める"], ensure_ascii=False)
     kp4 = json.dumps(["やるのは自分だし、後悔するくらいならやる","人のせいにしてしまいそうだった","今一番引っかかってるポイントってどこですか"], ensure_ascii=False)
     rp4 = json.dumps(["比較したい気持ちに共感する","まこさんの実例を使う（元看護師・彼氏に反対された）","自分で決める大切さを伝える","最後は引っかかっているポイントを確認する質問で締める"], ensure_ascii=False)
 
@@ -475,6 +481,25 @@ PHRASE_REASONS = {
     '比較すること自体は全然いいと思うんですけど、今一番【　　　　　　　　　　】ってどこですか？':
         '比較を否定せず受け入れた上で、核心的な懸念を特定する質問。「全部見てから決めたい」という漠然とした不安を「この点が解消されれば決められる」という具体的な状態に変えます。',
 }
+
+
+# シミュレーション複合問題: customer_text → 使用テンプレートIDリスト
+SIMULATION_MULTI_TEMPLATES = {
+    '主人に相談したいのと、他のスクールも見てみたいんですよね。今すぐっていうのはちょっと': [3, 4],
+    '時間もないし、お金の不安もあって…どうしようかなって思っています': [1, 2],
+}
+
+
+def update_templates():
+    """既存DBのテンプレートスクリプトを最新内容に更新する"""
+    kp3 = json.dumps(["結局、自分の人生だからやらないと何も変わらない","旦那さんに反対されたからできなかった」っていう理由を、絶対に作りたくなかった","あの時やっておけばよかったな","後悔しない選択をした","40時間で5万円プラスの収益"], ensure_ascii=False)
+    rp3 = json.dumps(["一番応援してほしい人に反対されるしんどさに共感する","反対を「心配」として捉え直す","山北さんの実例を使う（旦那さんに反対された）","自分で決断することの大切さを伝える（後悔しない選択）","具体的な成果を伝える（40時間で5万円）","最後はやりたい気持ちを確認する質問で締める"], ensure_ascii=False)
+    t3 = TalkTemplate.query.get(3)
+    if t3:
+        t3.full_script = YAMAKITA_SCRIPT
+        t3.key_phrases = kp3
+        t3.required_points = rp3
+        db.session.commit()
 
 
 def extract_context(full_script, customer_text):
@@ -721,13 +746,24 @@ def submit_answer():
     question = Question.query.get_or_404(question_id)
 
     if question.mode in ('reproduction', 'simulation'):
-        template = TalkTemplate.query.get(question.talk_template_id)
         category = Category.query.get(question.category_id)
-        kp = json.loads(template.key_phrases) if template.key_phrases else []
-        rp = json.loads(template.required_points) if template.required_points else []
+        # 複合問題は複数テンプレートを結合
+        extra_ids = SIMULATION_MULTI_TEMPLATES.get(question.customer_text or '', [])
+        if extra_ids:
+            templates_list = TalkTemplate.query.filter(TalkTemplate.id.in_(extra_ids)).order_by(TalkTemplate.id).all()
+        else:
+            primary = TalkTemplate.query.get(question.talk_template_id)
+            templates_list = [primary] if primary else []
+        combined_script = '\n\n---\n\n'.join(t.full_script for t in templates_list)
+        combined_display = '・'.join(t.display_name for t in templates_list)
+        kp = []
+        rp = []
+        for t in templates_list:
+            kp.extend(json.loads(t.key_phrases) if t.key_phrases else [])
+            rp.extend(json.loads(t.required_points) if t.required_points else [])
         try:
             result = ai_score(question.mode, category.name, question.customer_text or '',
-                              template.display_name, template.full_script, kp, rp, answer_text)
+                              combined_display, combined_script, kp, rp, answer_text)
         except Exception as e:
             return jsonify({'error': f'AI採点エラー: {e}'}), 500
         answer = Answer(user_id=session['user_id'], question_id=question_id,
@@ -759,14 +795,25 @@ def submit_answer():
                             'ideal_answer': ' → '.join(correct)}, ensure_ascii=False))
     else:
         correct = (question.correct_answer or '').strip()
-        is_correct = answer_text.lower() == correct.lower()
-        score = 100 if is_correct else 0
+        ans_l, cor_l = answer_text.lower(), correct.lower()
+        if ans_l == cor_l:
+            score, is_correct = 100, True
+            good = ['正解！完璧です！']
+            improve = []
+        elif cor_l in ans_l or ans_l in cor_l:
+            score, is_correct = 70, False
+            good = ['ほぼ正解！ニュアンスはOKです']
+            improve = [f'より正確には「{correct}」です']
+        else:
+            score, is_correct = 0, False
+            good = ['惜しい！']
+            improve = [f'正解は「{correct}」です']
         answer = Answer(user_id=session['user_id'], question_id=question_id,
                         answer_text=answer_text, score_total=score,
                         title=score_to_title(score), is_passed=is_correct,
                         ai_feedback=json.dumps({
-                            'good_points': ['正解！' if is_correct else '惜しい！'],
-                            'improvement_points': [] if is_correct else [f'正解は「{correct}」です'],
+                            'good_points': good,
+                            'improvement_points': improve,
                             'ideal_answer': correct}, ensure_ascii=False))
 
     db.session.add(answer)
@@ -887,6 +934,7 @@ def update_day():
 with app.app_context():
     db.create_all()
     seed_db()
+    update_templates()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))

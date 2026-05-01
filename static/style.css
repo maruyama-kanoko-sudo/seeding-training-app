@@ -286,7 +286,9 @@ body { font-family: 'Hiragino Sans', 'Meiryo', sans-serif; background: var(--bg)
 .phrase-reason-card { background: linear-gradient(135deg, #fff9e6, #fff3cd) !important; border: 1.5px solid #f9ca24 !important; }
 .phrase-reason-text { font-size: 14px; color: #5a4000; line-height: 1.7; }
 .customer-bubble { background: #f0eeff; border-radius: 18px 18px 18px 4px; padding: 16px 18px; margin-bottom: 18px; }
-.customer-bubble::before { content: '👤 カウンセラー'; display: block; font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.customer-bubble::before { content: '👤 お客様'; display: block; font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+.counselor-bubble { background: #e8f5e9; border-radius: 18px 18px 4px 18px; padding: 16px 18px; margin-bottom: 18px; }
+.counselor-bubble::before { content: '👤 カウンセラー'; display: block; font-size: 11px; font-weight: 700; color: #2e7d32; margin-bottom: 6px; }
 .btn-voice { display: block; width: 100%; margin-top: 10px; padding: 12px; border: 2px solid var(--primary); border-radius: 12px; background: #fff; color: var(--primary); font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: inherit; }
 .btn-voice:hover { background: #f0eeff; }
 .btn-voice.recording { background: #ffe0e0; border-color: #e55; color: #e55; animation: pulse 1s infinite; }
