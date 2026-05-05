@@ -394,6 +394,9 @@ def _additional_questions():
         Question(day=1, mode='quick', category_id=4, talk_template_id=4, question_type='fill_blank', customer_text='"本当にできるの？"とか"時間取れるの？"ってかなり【　　】に反対されたらしくて', prompt_text='【　　】に入る言葉は？', correct_answer='論理的', difficulty=2),
         Question(day=1, mode='quick', category_id=4, talk_template_id=4, question_type='fill_blank', customer_text='最初に【　　】取れた時に、めちゃくちゃ嬉しくて彼氏さんに報告したら', prompt_text='【　　】に入る言葉は？', correct_answer='案件', difficulty=2),
         Question(day=1, mode='quick', category_id=4, talk_template_id=4, question_type='fill_blank', customer_text='比較すること自体は全然いいと思うんですけど、今一番【　　　　　　　　　　】ってどこですか？', prompt_text='【　　　　　　　　　　】に入る言葉は？', correct_answer='引っかかってるポイント', difficulty=2),
+        # ── DAY3 実戦シミュレーション追加 ──
+        Question(day=3, mode='simulation', category_id=2, talk_template_id=2, question_type='free_text', customer_text='忙しくて時間も取れないし、今の仕事辞めてから考えようかなって思ってるんですよね', prompt_text='複合渋り（時間＋今じゃない）に対応してください。いくみさんトークを使って回答しましょう', difficulty=3),
+        Question(day=3, mode='simulation', category_id=4, talk_template_id=4, question_type='free_text', customer_text='他のスクールも気になってるし、金額的にも正直もう少し安い方がいいなって', prompt_text='複合渋り（他社比較＋金額）に対応してください。まこさんトークとはるかさんトークを組み合わせて回答しましょう', difficulty=3),
     ]
 
 
@@ -487,6 +490,7 @@ PHRASE_REASONS = {
 SIMULATION_MULTI_TEMPLATES = {
     '主人に相談したいのと、他のスクールも見てみたいんですよね。今すぐっていうのはちょっと': [3, 4],
     '時間もないし、お金の不安もあって…どうしようかなって思っています': [1, 2],
+    '他のスクールも気になってるし、金額的にも正直もう少し安い方がいいなって': [4, 1],
 }
 
 
