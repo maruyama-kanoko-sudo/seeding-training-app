@@ -936,9 +936,15 @@ def update_day():
 # ── Startup ───────────────────────────────────────────────────────────────────
 
 with app.app_context():
-    db.create_all()
-    seed_db()
-    update_templates()
+    try:
+        db.create_all()
+        seed_db()
+        update_templates()
+        print('✅ 起動完了')
+    except Exception as e:
+        import traceback
+        print(f'❌ 起動エラー: {e}')
+        traceback.print_exc()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
