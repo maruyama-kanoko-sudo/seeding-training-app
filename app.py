@@ -299,6 +299,7 @@ def seed_db():
         Category(id=4, name='他社比較渋りトーク', description='他社と比べる不安を解消し、あなたに合う選択をサポート！', emoji='⚖️'),
     ]
     db.session.add_all(cats)
+    db.session.flush()  # PostgreSQL FK制約のため先にカテゴリを確定
 
     kp1 = json.dumps(["今の状況で貯金ができてないのに、貯めてからって言ってたら、いつになるか分からない","120万円くらい差が出るかもしれない","人生最後の貧乏だと思ってやります","一緒に考えてみてもいいですか"], ensure_ascii=False)
     rp1 = json.dumps(["共感・受け入れから始める","はるかさんの実例を使う（医療事務、手取り15万）","具体的な数字を入れる（120万円）","最後は質問で締める"], ensure_ascii=False)
@@ -316,6 +317,7 @@ def seed_db():
         TalkTemplate(id=4, category_id=4, display_name='他社比較渋りトーク', internal_case_name='まこさんトーク', full_script=MAKO_SCRIPT, key_phrases=kp4, required_points=rp4),
     ]
     db.session.add_all(templates)
+    db.session.flush()  # PostgreSQL FK制約のため先にテンプレートを確定
 
     steps1 = json.dumps(["①共感・受け入れ", "②はるかさんの実例紹介", "③数字で訴求（120万円）", "④質問で締める"], ensure_ascii=False)
     steps2 = json.dumps(["①共感・受け入れ", "②いくみさんの実例紹介", "③時間は作るもの", "④一緒に考える提案"], ensure_ascii=False)
