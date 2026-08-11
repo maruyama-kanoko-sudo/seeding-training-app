@@ -598,20 +598,25 @@ def index():
 
 @app.route('/api/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    name = (data.get('name') or '').strip()
-    email = (data.get('email') or '').strip()
-    if not name or not email:
-        return jsonify({'error': '名前とメールアドレスを入力してください'}), 400
-    user = User.query.filter_by(email=email).first()
-    if user:
+    try:
+        data = request.get_json()
+        name = (data.get('name') or '').strip()
+        email = (data.get('email') or '').strip()
+        if not name or not email:
+            return jsonify({'error': '名前とメールアドレスを入力してください'}), 400
+        user = User.query.filter_by(email=email).first()
+        if user:
+            session['user_id'] = user.id
+            return jsonify({'user': user.to_dict(), 'message': 'ログインしました'})
+        user = User(name=name, email=email)
+        db.session.add(user)
+        db.session.commit()
         session['user_id'] = user.id
-        return jsonify({'user': user.to_dict(), 'message': 'ログインしました'})
-    user = User(name=name, email=email)
-    db.session.add(user)
-    db.session.commit()
-    session['user_id'] = user.id
-    return jsonify({'user': user.to_dict(), 'message': '登録完了しました'})
+        return jsonify({'user': user.to_dict(), 'message': '登録完了しました'})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'サーバーエラー: {str(e)}'}), 500
 
 
 @app.route('/api/login', methods=['POST'])
