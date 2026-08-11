@@ -18,6 +18,7 @@ app.config.update(
     SECRET_KEY=os.getenv('SECRET_KEY', 'seeding-secret-2024'),
     SQLALCHEMY_DATABASE_URI=_db_url,
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    SQLALCHEMY_ENGINE_OPTIONS={'pool_pre_ping': True, 'pool_recycle': 280},
     SESSION_COOKIE_SAMESITE='Lax',
     SESSION_COOKIE_HTTPONLY=True,
 )
