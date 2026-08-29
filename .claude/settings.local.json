@@ -20,7 +20,9 @@
       "Bash(lsof -ti:8000)",
       "WebFetch(domain:candid-khapse-f58067.netlify.app)",
       "Bash(curl -s http://localhost:8000/api/categories)",
-      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@example.com\",\"password\":\"admin123\"}')"
+      "Bash(curl -s -X POST http://localhost:8000/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"admin@example.com\",\"password\":\"admin123\"}')",
+      "Read(//Users/kanoko/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/621d36f7-7edd-496f-bfaa-4da2b84fe272/8b24df2e-1d74-4dfd-b598-a82fc9308f0c/skills/xlsx/**)",
+      "Bash(python3 -)"
     ]
   }
 }
